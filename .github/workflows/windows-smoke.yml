@@ -1,0 +1,32 @@
+name: Windows smoke tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-tests:
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Run unit tests
+        run: python -m unittest -v
+      - name: Verify command-line samples
+        shell: pwsh
+        run: |
+          $before = python diagnose.py before.json
+          if ($LASTEXITCODE -ne 0 -or $before -notlike 'check_client_dns:*') { throw 'Unexpected before result' }
+          Write-Output $before
+          $after = python diagnose.py after.json
+          if ($LASTEXITCODE -ne 0 -or $after -notlike 'discovery_restored:*') { throw 'Unexpected after result' }
+          Write-Output $after
