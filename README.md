@@ -60,6 +60,10 @@ single result. Invalid input exits with status 2.
 | A check result is a string rather than a boolean | Input error on stderr; no stdout | 2 |
 | Malformed JSON | Input error on stderr; no stdout | 2 |
 
+### Windows Server 2025 — offline tool
+
+[GitHub Actions run](https://github.com/atakanerez/windows-support-lab/actions/runs/43840204060) passed with Python 3.12: all five unit tests and both command-line examples. The workflow runs on Windows Server 2025 using synthetic inputs; it does not configure DNS, start AD DS, or validate a domain sign-in.
+
 ### Live Windows and Active Directory validation — pending
 
 Requires an isolated Windows Server lab with AD DS and DNS, a domain-joined Windows client, and a dedicated test account. Capture the three checks in the incident table before and after correcting the client DNS setting. Pass criteria: the client uses the approved lab resolver, the SRV lookup returns the expected controller, controller discovery succeeds, and a fresh sign-in with the test account is confirmed against the domain rather than relying on cached credentials. Retain only redacted evidence.
