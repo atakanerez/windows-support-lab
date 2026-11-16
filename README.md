@@ -46,3 +46,22 @@ in order: `client_dns_matches_lab`, `dc_srv_resolves`, and
 `domain_controller_discovery`. Use JSON booleans. The tool suggests the
 next check when discovery fails; it does not assert a root cause from a
 single result. Invalid input exits with status 2.
+
+## Verification results
+
+**16 November 2026** · Clean checkout of [`3139e84`](https://github.com/atakanerez/windows-support-lab/commit/3139e84) · Linux, Python 3.12.14. All **5 unit tests** and **6 command-line checks** passed using synthetic inputs.
+
+| Command-line scenario | Observed output code | Exit |
+| --- | --- | --- |
+| Client resolver differs from the baseline; SRV lookup fails | `check_client_dns` | 0 |
+| Client resolver matches the baseline; SRV lookup fails | `check_srv_resolution` | 0 |
+| SRV lookup succeeds; controller discovery fails | `check_dc_discovery` | 0 |
+| SRV lookup and controller discovery succeed | `discovery_restored` | 0 |
+| A check result is a string rather than a boolean | Input error on stderr; no stdout | 2 |
+| Malformed JSON | Input error on stderr; no stdout | 2 |
+
+### Live Windows and Active Directory validation — pending
+
+Requires an isolated Windows Server lab with AD DS and DNS, a domain-joined Windows client, and a dedicated test account. Capture the three checks in the incident table before and after correcting the client DNS setting. Pass criteria: the client uses the approved lab resolver, the SRV lookup returns the expected controller, controller discovery succeeds, and a fresh sign-in with the test account is confirmed against the domain rather than relying on cached credentials. Retain only redacted evidence.
+
+The Python results above validate the offline tool. Windows commands and domain sign-in have not been run in a live lab.
