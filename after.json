@@ -1,0 +1,5 @@
+{
+  "client_dns_matches_lab": true,
+  "dc_srv_resolves": true,
+  "domain_controller_discovery": true
+}
